@@ -1,0 +1,13 @@
+
+Usage
+
+$('#id').swipe(function(e) {
+	console.log(e.dx + ', ' + e.dy);
+});
+
+or
+
+$('#id').bind('swipe', function(e) {
+	console.log(e.dx + ', ' + e.dy);
+});
+
