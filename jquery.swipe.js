@@ -1,4 +1,4 @@
-(function() {
+(function($) {
 	var type = 'swipe',
 		ts = 'touchstart',
 		tm = 'touchmove',
@@ -36,7 +36,7 @@
 			event.dx = endX - startX;
 			event.dy = endY - startY;
 			
-			startX = startY = endX = endY = 0;
+			touchCancel();
 			
 			if (Math.abs(event.dx) > tolerance) {
 				args.unshift(event);
