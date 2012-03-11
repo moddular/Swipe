@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Swipe Demo</title>
+	
+	<script>document.documentElement.className = 'js';</script>
+	
+	<style>
+	ol, li {
+		margin: 0; padding: 0;
+		list-style: none;
+	}
+	html.js .carousel {
+		position: relative;
+		width: 600px; height: 450px;
+		overflow: hidden;
+	}
+	html.js .carousel ol {
+		position: absolute;
+		left: 0; top: 0;
+		width: 1800px; height: 450px;
+	}
+	html.js .carousel ol li {
+		float: left;
+	}
+	</style>
+</head>
+<body>
+	
+	<div class="carousel">
+		<ol>
+			<li><img src="images/att-park-1.jpg" alt=""></li>
+			<li><img src="images/att-park-2.jpg" alt=""></li>
+			<li><img src="images/att-park-3.jpg" alt=""></li>
+		</ol>
+	</div>
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="jquery.swipe.js"></script>
+	<script>
+	(function($) {
+		var $carousel = $('.carousel'),
+			$list = $carousel.find('> ol'),
+			total = $list.find('> li').length,
+			current = 0;
+			
+		$carousel.swipe(function(e) {
+			var length = Math.abs(e.dx),
+				step = length / e.dx * -1,
+				next = current + step;
+			
+			if (length > 50 && next >= 0 && next < total) {
+				current = next;
+			}
+			$list.animate({left: -600 * current}, 'fast');
+		});
+	})(jQuery);
+	</script>
+</body>
+</html>

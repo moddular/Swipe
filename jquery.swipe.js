@@ -4,28 +4,21 @@
 		tm = 'touchmove',
 		te = 'touchend',
 		tc = 'touchcancel',
-		startX = 0,
-		startY = 0,
-		endX = 0,
-		endY = 0,
+		start = {x: 0, y: 0},
+		end = {x: 0, y: 0},
 		tolerance = 10,
 		touchStart = function(e) {
-			if (e.targetTouches) {
-				startX = endX = e.targetTouches[0].pageX;
-				startY = endY = e.targetTouches[0].pageY;
+			if (isTouchEvent(e)) {
+				start = getPos(e);
+				end = getPos(e);
 			}
 		},
 		touchMove = function(e) {
-			var x, y;
-			if (e.targetTouches) {
-				x = e.targetTouches[0].pageX;
-				y = e.targetTouches[0].pageY;
-				
-				if (Math.abs(startY - y) < tolerance) {
+			if (isTouchEvent(e)) {
+				end = getPos(e);
+				if (Math.abs(start.y - end.y) < tolerance) {
 					e.preventDefault();
 				}
-				endX = x;
-				endY = y;
 			}
 		},
 		touchEnd = function(e) {
@@ -33,19 +26,30 @@
 				event = $.event.fix(e);
 
 			event.type = type;
-			event.dx = endX - startX;
-			event.dy = endY - startY;
+			event.dx = end.x - start.x;
+			event.dy = end.y - start.y;
 			
 			touchCancel();
 			
-			if (Math.abs(event.dx) > tolerance) {
+			if (Math.abs(event.dx) > tolerance || Math.abs(event.dy) > tolerance) {
 				args.unshift(event);
 				($.event.dispatch || $.event.handle).apply(this, args);
 			}
 		},
 		touchCancel = function(e) {
-			startX = startY = endX = endY = 0;
+			start.x = start.y = end.x = end.y = 0;
+		},
+		isTouchEvent = function(e) {
+			return e.targetTouches && e.targetTouches.length === 1;
+		},
+		getPos = function(e) {
+			var touch = e.targetTouches[0];
+			return {
+				x: touch.pageX,
+				y: touch.pageY
+			};
 		};
+		
 	
 	$.event.special[type] = {
 		setup: function() {
